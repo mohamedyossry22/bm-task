@@ -7,6 +7,7 @@ import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -25,10 +26,10 @@ import { RouterModule } from '@angular/router';
   imports: [
     MaterialModule,
     ReactiveFormsModule,
-    
     FormsModule,
     RouterModule,
     HttpClientModule,
+    ToastrModule.forRoot(),
     CommonModule
   ]
 })
