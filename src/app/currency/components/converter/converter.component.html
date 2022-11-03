@@ -1,1 +1,32 @@
-<p>converter works!</p>
+
+<div class="title mt-5">
+    <h2>Converter :</h2>
+</div>
+
+
+<div class="row mt-3">
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <app-input [label]="'Amount'" [type]="'number'" [placeholder]="'enter amount'"></app-input>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <app-select [label]="'From'"></app-select>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <app-select [label]="'To'"></app-select>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12 ">
+        <div class="d-flex justify-content-start align-items-center btnBox">
+            <button mat-flat-button color="primary" class="w-25 mr-2">Swap</button>
+            <button mat-flat-button class="btn btn-success w-50">Convert</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="result d-flex justify-content-around w-50 p-4 mx-auto mt-3 align-items-center">
+    <h1>Result : </h1> 
+    <h1>124.52</h1>
+</div>

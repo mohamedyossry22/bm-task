@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Input } from '@angular/core';
+import { AbstractControl, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -7,6 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InputComponent implements OnInit {
 
+  @Input() label:string = ""
+  @Input() type:string = ""
+  @Input() placeholder:string = ""
+  @Input() control:AbstractControl = new FormControl
   constructor() { }
 
   ngOnInit(): void {

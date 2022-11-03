@@ -6,6 +6,7 @@ import { SelectComponent } from './components/select/select.component';
 import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -15,10 +16,18 @@ import { HttpClientModule } from '@angular/common/http';
     InputComponent,
     SelectComponent
   ],
+  exports:[
+    NavbarComponent,
+    InputComponent,
+    SelectComponent,
+    MaterialModule
+  ],
   imports: [
     MaterialModule,
     ReactiveFormsModule,
+    
     FormsModule,
+    RouterModule,
     HttpClientModule,
     CommonModule
   ]
