@@ -1,4 +1,4 @@
-import { Component, OnInit , Input} from '@angular/core';
+import { Component, OnInit , Input , Output , EventEmitter} from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
 
 @Component({
@@ -11,11 +11,15 @@ export class SelectComponent implements OnInit {
   @Input() control:AbstractControl= new FormControl
   @Input() data = []
   @Input() disabled:boolean = false
-  
+  @Input() multiple:boolean = false
+  @Output() multiSelectValues = new EventEmitter()
   constructor() {
    }
 
   ngOnInit(): void {
   }
 
+  getValue(event:any) {
+    this.multiSelectValues.emit(event.value)
+  }
 }

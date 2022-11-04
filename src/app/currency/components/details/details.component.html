@@ -1,4 +1,4 @@
-<app-converter [detailsMode]="true" ></app-converter>
+<app-converter [detailsMode]="true"  (symbolsOutside)="getSymbols($event)"></app-converter>
 
 <hr>
 
@@ -11,16 +11,116 @@
 
     <div class="col-md-3  d-flex align-items-center">
         <h1>From :</h1>
-        <h3>{{convertResult?.fullName?.from.name}}</h3>
+        <h3>{{convertResult?.fromFullName?.name}}</h3>
     </div>
 
     <div class="col-md-3  d-flex align-items-center">
         <h1>To : </h1>
-        <h3>{{convertResult?.fullName?.to.name}}</h3>
+        <h3>{{convertResult?.toFullName?.name}}</h3>
     </div>
 
     <div class="col-md-3  d-flex align-items-center">
         <h1>Result : </h1>
         <h3 class="result">{{convertResult?.result}}</h3>
     </div>
+</div>
+
+
+<hr>
+
+<div class="tabs">
+    <mat-tab-group>
+        <mat-tab label="Historical"> 
+            <div class="w-25 my-3">
+                <form [formGroup]="dateFilterForm">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [rangePicker]="picker" >
+                          <input matStartDate placeholder="Start date" formControlName="start_date">
+                          <input matEndDate placeholder="End date"  formControlName="end_date" (dateChange)="getDateChanged($event)">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </form>
+           
+             
+            </div>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8  w-100 ">
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="position">
+                  <th mat-header-cell *matHeaderCellDef> No. </th>
+                  <td mat-cell *matCellDef="let element;let index = index"> {{index + 1}} </td>
+                </ng-container>
+              
+                <!-- day Column -->
+                <ng-container matColumnDef="day">
+                  <th mat-header-cell *matHeaderCellDef> Day </th>
+                  <td mat-cell *matCellDef="let element"> {{element.day}} </td>
+                </ng-container>
+              
+                <!-- from Column -->
+                <ng-container matColumnDef="from">
+                  <th mat-header-cell *matHeaderCellDef> From </th>
+                  <td mat-cell *matCellDef="let element"> {{element.from}} </td>
+                </ng-container>
+              
+                <!-- to Column -->
+                <ng-container matColumnDef="to">
+                    <th mat-header-cell *matHeaderCellDef> To </th>
+                    <td mat-cell *matCellDef="let element"> {{element.to}} </td>
+                  </ng-container>
+    
+                       <!-- to Column -->
+                <ng-container matColumnDef="result">
+                  <th mat-header-cell *matHeaderCellDef> result </th>
+                  <td mat-cell *matCellDef="let element"> {{element.result}} </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+        </mat-tab>
+        <mat-tab label="From Conversions"> 
+          <div class="d-flex align-items-baseline">
+            <div class="w-25 my-3 mr-2">
+              <app-select [label]="'Select Symbols'" [data]="symbols"  (multiSelectValues)="getSelectedValues($event)" [multiple]="true"></app-select>
+            </div>
+
+            <button  mat-flat-button class="btn btn-success" (click)="compere()">Result</button>
+          </div>
+          
+          <table mat-table [dataSource]="dataSourceCompere" class="mat-elevation-z8  w-100 ">
+            <!-- Amount Column -->
+            <ng-container matColumnDef="Amount">
+              <th mat-header-cell *matHeaderCellDef> Amount </th>
+              <td mat-cell *matCellDef="let element;let index = index"> {{element.amount}} </td>
+            </ng-container>
+
+          <!-- from Column -->
+            <ng-container matColumnDef="from">
+              <th mat-header-cell *matHeaderCellDef> From </th>
+              <td mat-cell *matCellDef="let element"> {{element.from }} </td>
+            </ng-container>
+          
+            <!-- to Column -->
+            <ng-container matColumnDef="to">
+                <th mat-header-cell *matHeaderCellDef> To </th>
+                <td mat-cell *matCellDef="let element"> {{element.to}} </td>
+              </ng-container>
+
+            <!-- to result -->
+            <ng-container matColumnDef="result">
+              <th mat-header-cell *matHeaderCellDef> Result </th>
+              <td mat-cell *matCellDef="let element"> {{element.result}} </td>
+            </ng-container>
+              
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsCompere"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsCompere;"></tr>
+          </table>
+        </mat-tab>
+        <mat-tab label="Third"> Content 3 </mat-tab>
+      </mat-tab-group>
+      
 </div>

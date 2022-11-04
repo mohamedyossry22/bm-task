@@ -15,6 +15,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule, MatRippleModule, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   imports: [],
@@ -24,6 +25,7 @@ import {MatNativeDateModule, MatRippleModule, MAT_DATE_LOCALE} from '@angular/ma
     MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
+    MatTabsModule,
     MatCardModule,
     MatCheckboxModule,
     MatDialogModule,

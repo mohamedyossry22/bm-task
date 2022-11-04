@@ -21,7 +21,10 @@ import { ToastrModule } from 'ngx-toastr';
     NavbarComponent,
     InputComponent,
     SelectComponent,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    RouterModule,
   ],
   imports: [
     MaterialModule,

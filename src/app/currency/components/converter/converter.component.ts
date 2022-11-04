@@ -1,4 +1,4 @@
-import { Component, OnInit , Input } from '@angular/core';
+import { Component, OnInit , Input , Output , EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConvertResult } from '../../models/DTOs';
@@ -21,29 +21,13 @@ export class ConverterComponent implements OnInit {
         this.createForm()
         this.convert()
       }else {
-        console.log("Forl")
         this.createForm()
       }
     })
    }
-  //resultData!:ConvertResult;
-  resultData:any = {
-    query : {
-      amount:"1",
-      from:"POD",
-      to:"EUR"
-    },
-    fullName : {
-      from:"",
-      to:""
-    },
-    result:1.21546
-  }
-  symbols:object[] = [
-    {value:"USD" , name:'Dolar'},
-    {value:"EUR" , name:'EURO'},
-    {value:"POD" , name:'Pound'},
-  ];
+  resultData!:ConvertResult;
+  @Output() symbolsOutside:any = new EventEmitter() ;
+  symbols:any = [];
   ngOnInit(): void {
     this.getSymbols()
   }
@@ -60,8 +44,8 @@ export class ConverterComponent implements OnInit {
 
   getSymbols() {
     this.service.getAllSymbols().subscribe(res => {
+      this.symbolsOutside.emit( this.SymbolsMapping(res))
       this.symbols = this.SymbolsMapping(res)
-      this.service.symbols.next(this.symbols)
     } ) 
   }
 
@@ -69,10 +53,11 @@ export class ConverterComponent implements OnInit {
     this.service.convertCurrency(this.convertForm.value).subscribe((res:ConvertResult) => {
       this.resultData = res
       this.resultData.result = +this.resultData.result.toFixed(2)
-    })
-    this.resultData.fullName.from = this.symbols.find((item:any) => item.value == this.resultData.query.from)
-    this.resultData.fullName.to = this.symbols.find((item:any) => item.value == this.resultData.query.to)
+      this.resultData.fromFullName = this.symbols.find((item:any) => item.value == this.resultData.query.from)
+    this.resultData.toFullName = this.symbols.find((item:any) => item.value == this.resultData.query.to)
     this.service.convertResults.next(this.resultData)
+    })
+    
 
     if(this.detailsMode){
       this.router.navigate(['.'], { relativeTo: this.route, queryParams: this.setQueryParams()})

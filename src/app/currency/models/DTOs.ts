@@ -15,4 +15,12 @@ export interface ConvertResult {
     query:ConvertFilter
     result:Number
     success:boolean
+    fromFullName:string
+    toFullName:string
 }
+export interface DateRangeCurrency {
+    day: string;
+    from: string;
+    to: string;
+  }
+  

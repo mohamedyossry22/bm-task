@@ -19,7 +19,7 @@
 
     <div class="col-lg-3 col-md-6 col-sm-12 ">
         <div class="d-flex justify-content-start align-items-center btnBox">
-            <button [disabled]="convertForm.invalid" mat-flat-button color="primary" class="w-25 mr-2" (click)="swap()">Swap</button>
+            <button *ngIf="!detailsMode" [disabled]="convertForm.invalid" mat-flat-button color="primary" class="w-25 mr-2" (click)="swap()">Swap</button>
             <button [disabled]="convertForm.invalid" mat-flat-button class="btn btn-success w-50" (click)="convert()">Convert</button>
         </div>
     </div>

@@ -10,7 +10,7 @@ import { ConvertFilter, ConvertResult, Symbols } from '../models/DTOs';
 export class CurrencyService {
 
   convertResults = new BehaviorSubject<ConvertResult>({} as ConvertResult);
-  symbols = new BehaviorSubject({});
+  symbols = new BehaviorSubject([{}]);
   constructor(private http:HttpClient) { }
 
   getAllSymbols():Observable<Symbols> {
@@ -23,5 +23,21 @@ export class CurrencyService {
       params = params.set(key , value)
     })
     return this.http.get(environment.baseApi + '/convert' , {params}).pipe(map((res:any) => res  ))
+  }
+
+  dateRangeConvert(model:object) {
+    let params = new HttpParams();
+    Object.entries(model).forEach(([key , value]) =>{
+      params = params.set(key , value)
+    })
+    return this.http.get(environment.baseApi+'/timeseries', {params})
+  }
+
+  compereSelectedValues(model:object) {
+    let params = new HttpParams();
+    Object.entries(model).forEach(([key , value]) =>{
+      params = params.set(key , value)
+    })
+    return this.http.get(environment.baseApi+'/latest', {params})
   }
 }
