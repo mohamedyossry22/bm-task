@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConvertResult } from '../../models/DTOs';
 import { CurrencyService } from '../../services/currency.service';
 
@@ -10,22 +10,50 @@ import { CurrencyService } from '../../services/currency.service';
   styleUrls: ['./converter.component.scss']
 })
 export class ConverterComponent implements OnInit {
-
-  convertForm!:FormGroup
-  constructor(private service:CurrencyService , private fb:FormBuilder) { }
-  resultData!:ConvertResult;
-  symbols:any;
+  @Input() detailsMode:boolean = false
+  convertForm!:FormGroup;
+  convertCriteria:any
+  constructor(private service:CurrencyService , private fb:FormBuilder , private router:Router , private route:ActivatedRoute) {
+    
+    this.route.queryParams.subscribe(res => {
+      if(Object.keys(res).length !== 0) {
+        this.convertCriteria = res
+        this.createForm()
+        this.convert()
+      }else {
+        console.log("Forl")
+        this.createForm()
+      }
+    })
+   }
+  //resultData!:ConvertResult;
+  resultData:any = {
+    query : {
+      amount:"1",
+      from:"POD",
+      to:"EUR"
+    },
+    fullName : {
+      from:"",
+      to:""
+    },
+    result:1.21546
+  }
+  symbols:object[] = [
+    {value:"USD" , name:'Dolar'},
+    {value:"EUR" , name:'EURO'},
+    {value:"POD" , name:'Pound'},
+  ];
   ngOnInit(): void {
     this.getSymbols()
-    this.createForm()
   }
 
 
   createForm() {
     this.convertForm = this.fb.group({
-      amount:['' , Validators.required],
-      from:['' , Validators.required],
-      to:['' , Validators.required]
+      amount:[this.convertCriteria?.amount || '' , Validators.required],
+      from:[this.convertCriteria?.from || '' , Validators.required],
+      to:[this.convertCriteria?.to || '' , Validators.required]
     })
   }
 
@@ -33,6 +61,7 @@ export class ConverterComponent implements OnInit {
   getSymbols() {
     this.service.getAllSymbols().subscribe(res => {
       this.symbols = this.SymbolsMapping(res)
+      this.service.symbols.next(this.symbols)
     } ) 
   }
 
@@ -41,6 +70,13 @@ export class ConverterComponent implements OnInit {
       this.resultData = res
       this.resultData.result = +this.resultData.result.toFixed(2)
     })
+    this.resultData.fullName.from = this.symbols.find((item:any) => item.value == this.resultData.query.from)
+    this.resultData.fullName.to = this.symbols.find((item:any) => item.value == this.resultData.query.to)
+    this.service.convertResults.next(this.resultData)
+
+    if(this.detailsMode){
+      this.router.navigate(['.'], { relativeTo: this.route, queryParams: this.setQueryParams()})
+    }
   }
 
   swap() {
@@ -60,6 +96,17 @@ export class ConverterComponent implements OnInit {
   }
 
 
+  navigate() {
+    this.router.navigate(['/currency/details'] , { queryParams: this.setQueryParams() })
+  }
+
+  setQueryParams() {
+    return { 
+      amount: this.resultData.query.amount , 
+      from: this.resultData.query.from , 
+      to: this.resultData.query.to
+    }
+  }
 
   getControl(controlName:string) {
     return this.convertForm.controls[controlName]

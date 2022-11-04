@@ -1,14 +1,16 @@
 import { HttpClient , HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ConvertFilter, ConvertResult , Symbols } from '../models/DTOs';
+import { ConvertFilter, ConvertResult, Symbols } from '../models/DTOs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CurrencyService {
 
+  convertResults = new BehaviorSubject<ConvertResult>({} as ConvertResult);
+  symbols = new BehaviorSubject({});
   constructor(private http:HttpClient) { }
 
   getAllSymbols():Observable<Symbols> {

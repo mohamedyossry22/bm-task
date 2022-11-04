@@ -10,7 +10,10 @@ export class SelectComponent implements OnInit {
   @Input() label:string = ""
   @Input() control:AbstractControl= new FormControl
   @Input() data = []
-  constructor() { }
+  @Input() disabled:boolean = false
+  
+  constructor() {
+   }
 
   ngOnInit(): void {
   }

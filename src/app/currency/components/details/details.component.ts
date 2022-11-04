@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CurrencyService } from '../../services/currency.service';
 
 @Component({
   selector: 'app-details',
@@ -7,7 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetailsComponent implements OnInit {
 
-  constructor() { }
+  convertResult!:any;
+  constructor(private service:CurrencyService) {
+    this.service.convertResults.subscribe(res => {
+      if(Object.keys(res).length !== 0) {
+        this.convertResult = res
+      }
+    })
+  }
 
   ngOnInit(): void {
   }
