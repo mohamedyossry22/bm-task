@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  baseApi:'https://api.apilayer.com/fixer'
+
 };

@@ -1,0 +1,38 @@
+
+<div class="title mt-5">
+    <h2>Converter :</h2>
+</div>
+
+
+<div class="row mt-3">
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <app-input  [label]="'Amount'" [type]="'number'" [placeholder]="'enter amount'" [control]="getControl('amount')"></app-input>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <app-select [disabled]="detailsMode" [label]="'From'" [data]="symbols"  [control]="getControl('from')"></app-select>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <app-select [label]="'To'" [data]="symbols"  [control]="getControl('to')"></app-select>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12 ">
+        <div class="d-flex justify-content-start align-items-center btnBox">
+            <button *ngIf="!detailsMode" [disabled]="convertForm.invalid" mat-flat-button color="primary" class="w-25 mr-2" (click)="swap()">Swap</button>
+            <button [disabled]="convertForm.invalid" mat-flat-button class="btn btn-success w-50" (click)="convert()">Convert</button>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="resultData && !detailsMode">
+    <div  class="result d-flex justify-content-center w-50 p-4 mx-auto mt-3 align-items-center">
+        <h1>{{resultData?.query.amount}} {{resultData?.query.from}}</h1> 
+        <span class="mx-2 h1">=</span>
+        <h1>{{resultData?.result}} {{resultData?.query.to}} </h1>
+    </div>
+    
+    <div class="d-flex justify-content-center mt-3 mx-auto">
+        <button mat-raised-button color="basic" (click)="navigate()">Details</button>
+    </div>
+</ng-container>
