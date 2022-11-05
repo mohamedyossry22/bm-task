@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
-import { DateRangeCurrency } from '../../models/DTOs';
+import { ConvertFilter, DateRangeCurrency } from '../../models/DTOs';
 import { CurrencyService } from '../../services/currency.service';
 
 
@@ -11,22 +12,34 @@ import { CurrencyService } from '../../services/currency.service';
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'day', 'from' ,'to' , 'result'];
-  dataSource:any;
+  displayedColumns: string[] = ['position', 'day','amount', 'from' ,'to' , 'result'];
   displayedColumnsCompere: string[] = ['Amount','from' ,'to' , 'result'];
+  dataSource:any;
   dataSourceCompere:any;
+
+
   selectedSymbolsModel:any
   convertResult!:any;
   dateFilterForm!:FormGroup;
   symbols:any= [];
-  constructor(private service:CurrencyService , private fb:FormBuilder) {
+  detailsMode:boolean = false
+  queryData:any ;
+  fromFullName:string = ''
+  toFullName:string = ''
+  constructor(private service:CurrencyService , private fb:FormBuilder , private route:ActivatedRoute) {
     this.createForm()
-    this.service.convertResults.subscribe(res => {
-        this.convertResult = res;
-        console.log(this.convertResult)
-        this.dateFilterForm.get('base')?.setValue(this.convertResult?.query?.from)
-        this.dateFilterForm.get('symbols')?.setValue(this.convertResult?.query?.to)
+    this.route.queryParams.subscribe((queryResult:any) => {
+      if(Object.keys(queryResult).length > 0) {
+        this.detailsMode = true
+        this.queryData = queryResult
+        this.dateFilterForm.get('base')?.setValue(queryResult['from'])
+        this.dateFilterForm.get('symbols')?.setValue(queryResult['to'])
+        this.service.convertResults.subscribe(res => {
+          this.convertResult = res;
+        })
+      }
     })
+
   }
 
   ngOnInit(): void {
@@ -35,6 +48,8 @@ export class DetailsComponent implements OnInit {
 
   getSymbols(event:any) {
     this.symbols = event
+    this.fromFullName = this.symbols.find((item:any) => item.value == this.queryData.from)
+    this.toFullName = this.symbols.find((item:any) => item.value == this.queryData.to)
   }
   createForm() {
     this.dateFilterForm = this.fb.group({
@@ -46,7 +61,6 @@ export class DetailsComponent implements OnInit {
   }
 
   getDateChanged(event:any) {
-    console.log(this.dateFilterForm.value)
     if(this.dateFilterForm.controls['end_date'].valid) {
       this.dateFilterForm.value.start_date = this.changeDateFormat('start_date')
       this.dateFilterForm.value.end_date = this.changeDateFormat('end_date')
@@ -84,6 +98,7 @@ export class DetailsComponent implements OnInit {
     return  Object.entries(data.rates).map(([key, value]:any) => {
       return {
         day:key,
+        amount:1,
         to:Object.keys(value)[0] ,
         from:data.base,
         result:Object.values(value)[0]
