@@ -15,6 +15,7 @@ export class ConverterComponent implements OnInit {
   convertCriteria:any
   constructor(private service:CurrencyService , private fb:FormBuilder , private router:Router , private route:ActivatedRoute) {
 
+    //get data from url query
     this.route.queryParams.subscribe(res => {
       if(Object.keys(res).length !== 0) {
         this.convertCriteria = res
@@ -58,8 +59,9 @@ export class ConverterComponent implements OnInit {
     this.service.convertCurrency(this.convertForm.value).subscribe((res:ConvertResult) => {
       this.resultData = res
       this.resultData.result = +this.resultData.result.toFixed(2)
-    
       this.service.convertResults.next(this.resultData)
+
+      //update url query paranms with new selected data
       if(this.detailsMode || this.router.url == "/currency/details"){
         this.router.navigate(['.'], { relativeTo: this.route, queryParams: this.setQueryParams()})
         this.detailsMode = true
@@ -72,6 +74,7 @@ export class ConverterComponent implements OnInit {
   swap() {
     let to = this.convertForm.value['to'],
         from = this.convertForm.value['from'];
+    //update Reactiove form after swip selected data
     this.convertForm.get('to')?.setValue(from)
     this.convertForm.get('from')?.setValue(to)
     this.convert()
